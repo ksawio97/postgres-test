@@ -22,6 +22,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	id, err := db.Insert(conn, "insert", "test")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted row with auto-assigned id: " + fmt.Sprint(id))
+
 	// Read all rows in database
 	elements, err := db.Select(conn)
 	if err != nil {
