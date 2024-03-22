@@ -1,6 +1,8 @@
 package db
 
-import "fmt"
+import (
+	"database/sql"
+)
 
 type PostgresDBData struct {
 	Username      string
@@ -15,14 +17,15 @@ type Data struct {
 	Description string `field:"description"`
 }
 
-func (data Data) String() string {
-	return fmt.Sprintf("Id: %s Title: %s Description: %s", fmt.Sprint(data.Id), data.Title, data.Description)
+// DBClient defines the interface for database operations
+type DBClient interface {
+	Select() ([]Data, error)
+	Insert(title, description string) (int, error)
+	GetDataByID(id int) (*Data, error)
+	DeleteByID(id int) (bool, error)
 }
 
-func (data Data) Copy() Data {
-	return Data{
-		Id:          data.Id,
-		Title:       data.Title,
-		Description: data.Description,
-	}
+// SQLDBClient represents a concrete implementation of the DBClient interface
+type SQLDBClient struct {
+	Conn *sql.DB
 }

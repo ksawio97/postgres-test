@@ -14,6 +14,11 @@ func ConnectToDB(data PostgresDBData) (*sql.DB, error) {
 	return conn, nil
 }
 
+// NewSQLDBClient creates a new SQLDBClient instance
+func NewSQLDBClient(conn *sql.DB) *SQLDBClient {
+	return &SQLDBClient{Conn: conn}
+}
+
 func (postgresDBData PostgresDBData) connectionStringBuilder() string {
 	return fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
 		postgresDBData.Username,
