@@ -12,9 +12,9 @@ type PostgresDBData struct {
 }
 
 type Data struct {
-	Id          int    `field:"id"`
-	Title       string `field:"title"`
-	Description string `field:"description"`
+	Id          int    `json:"id" field:"id"`
+	Title       string `json:"title" field:"title"`
+	Description string `json:"description" field:"description"`
 }
 
 // DBClient defines the interface for database operations

@@ -14,7 +14,7 @@ func (c *SQLDBClient) Select() ([]Data, error) {
 	elements := []Data{}
 
 	var element Data
-	cols := getPointersToCols(element)
+	cols := getPointersToCols(&element)
 
 	for rows.Next() {
 		// Load query values into parameters
@@ -39,16 +39,20 @@ func (c *SQLDBClient) Insert(title, description string) (int, error) {
 }
 
 func (c *SQLDBClient) GetDataById(id int) (*Data, error) {
-	row := c.Conn.QueryRow(fmt.Sprintf(`SELECT id, title, description FROM public."Data" WHERE id = %s;`, fmt.Sprint(id)))
+	row := c.Conn.QueryRow(fmt.Sprintf(`SELECT id, title, description FROM public."Data" WHERE id = %s;`,
+		fmt.Sprint(id)))
 
 	if row.Err() != nil {
 		return nil, row.Err()
 	}
 
 	var element Data
-	cols := getPointersToCols(element)
+	cols := getPointersToCols(&element)
 
-	row.Scan(cols...)
+	err := row.Scan(cols...)
+	if err != nil {
+		return nil, err
+	}
 	return &element, nil
 }
 
@@ -66,9 +70,9 @@ func (c *SQLDBClient) DeleteById(id int) (bool, error) {
 	return rowsAffected == 1, nil
 }
 
-func getPointersToCols(element Data) []interface{} {
+func getPointersToCols(element *Data) []interface{} {
 	// Get pointers to every value in Data type
-	s := reflect.ValueOf(&element).Elem()
+	s := reflect.ValueOf(element).Elem()
 
 	// Get values count
 	numCols := s.NumField()

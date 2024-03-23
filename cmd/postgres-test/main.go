@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
+	"postgres-test/test/api"
 	"postgres-test/test/internal/postgres-test/db"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
@@ -16,8 +18,14 @@ func main() {
 	}
 
 	// Connect to database
-	_, err := db.ConnectToDB(postgresDBData)
+	conn, err := db.ConnectToDB(postgresDBData)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	client := db.NewSQLDBClient(conn)
+	handler := api.NewHandler(client)
+
+	r := gin.Default()
+	handler.SetupRoutes(r)
 }
