@@ -34,7 +34,10 @@ func (c *SQLDBClient) Insert(title, description string) (int, error) {
 		return 0, result.Err()
 	}
 
-	result.Scan(&id)
+	if err := result.Scan(&id); err != nil {
+		return 0, err
+	}
+
 	return id, nil
 }
 
@@ -49,8 +52,7 @@ func (c *SQLDBClient) GetDataById(id int) (*Data, error) {
 	var element Data
 	cols := getPointersToCols(&element)
 
-	err := row.Scan(cols...)
-	if err != nil {
+	if err := row.Scan(cols...); err != nil {
 		return nil, err
 	}
 	return &element, nil
