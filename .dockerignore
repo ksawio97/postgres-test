@@ -1,0 +1,6 @@
+/tmp
+/postgres-docker-setup
+
+.air.toml
+.gitignore
+Makefile
