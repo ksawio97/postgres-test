@@ -5,7 +5,7 @@ COPY . .
 RUN go mod download
 RUN go build -o app ./cmd/postgres-test/main.go
 
-FROM alpine:latest 
+FROM scratch
 WORKDIR /app/
 
 COPY --from=build /app/app /app
